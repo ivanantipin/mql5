@@ -1,0 +1,11 @@
+*
+!.gitignore
+!*/TDSeqMy.mq5
+!Utils.mqh
+!SetupTracker.mqh
+!Period.mqh
+!CountDownTracker.mqh
+!TDSeqObj.mqh
+!TDSL.mqh
+!CommonEnums.mqh
+!*/
