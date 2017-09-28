@@ -32,7 +32,7 @@ public :
    CArrayObj        *pendingStopLosses;
    void              CountDownTracker();
    void             ~CountDownTracker();
-   bool              calcCompleted(const int& signalLengths[]);
+   bool              calcCompleted(const int &signalLengths[]);
    void              calc(int perIdx);
    double            calcSl(int lastIdx);
    void              drawSL(int idx,double sl);
@@ -78,20 +78,35 @@ void CountDownTracker::init()
 //+------------------------------------------------------------------+
 void CountDownTracker::calc(int perIdx)
   {
+  
+  
+  
+  if(completed){
+      return;
+  }
+  
    Period* p0 = setupTracker.periods.At(perIdx);
    Period* p1 = setupTracker.periods.At(perIdx - 1);
    Period* p2 = setupTracker.periods.At(perIdx - 2);
+   
+        if(setupTracker.side == Sell && p0.close < setupTracker.tdst ||
+               setupTracker.side == Buy && p0.close > setupTracker.tdst){
+               completed = true;
+        return;
+     }
+
 
    if(combo)
-     {      
+     {
       int tot=bars.Total();
       Period *lp=NULL;
-      if(tot == 0){
-         lp = setupTracker.periods.At(perIdx - 2);
-      }else{
-         lp = setupTracker.periods.At(bars.At(bars.Total() - 1));
-      }
-                              
+      if(tot==0)
+        {
+         lp = setupTracker.periods.At(perIdx-2);
+           }else{
+         lp=setupTracker.periods.At(bars.At(bars.Total()-1));
+        }
+
       bool exceed2HL;
       bool exceedHL1HL;
       bool exceed1C;
@@ -109,7 +124,7 @@ void CountDownTracker::calc(int perIdx)
          exceedLB = p0.close < lp.close;
         }
 
-      bool flag = true;
+      bool flag=true;
       if(bars.Total()>=comboFinalBarsStart)
         {
          flag = flag && (exceed1C || !finalComboCloseExceed1CloseAgo);
@@ -138,7 +153,7 @@ void CountDownTracker::calc(int perIdx)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CountDownTracker::calcCompleted(const int& sl[])
+bool CountDownTracker::calcCompleted(const int &sl[])
   {
    if(completed) return true;
    int tot=bars.Total();
@@ -148,6 +163,7 @@ bool CountDownTracker::calcCompleted(const int& sl[])
       completed=true;
       return true;
      }
+
    int nextSignal;
 
    if(nextSignalIndex==ArraySize(sl))
@@ -167,11 +183,6 @@ bool CountDownTracker::calcCompleted(const int& sl[])
         {
          utils.drawLabel(setupTracker.chartId,p0,setupTracker.side,""+tot,7,drawCol);
         }
-       if(playSound1BarBeforeSignal && nextSignal-tot == showBarsBeforeSignal){
-         PlaySound("alert.wav");
-       }
-        
-        
      }
    if(!lastSignalValidated && nextSignalIndex>0)
      {
@@ -180,33 +191,33 @@ bool CountDownTracker::calcCompleted(const int& sl[])
       int ind8=bars.At(7);
       Period *p=setupTracker.periods.At(ind);
       Period *p8=setupTracker.periods.At(ind8);
-      bool completeFlag = true;
+      bool completeFlag=true;
       //input bool sequentaFinalBarHighLowExceed8Close = true;
       //input bool sequentaFinalBarCloseExceed8HighLow = false;
-      
-      if(setupTracker.side==Sell){
+
+      if(setupTracker.side==Sell)
+        {
          completeFlag = completeFlag && (!sequentaFinalBarHighLowExceed8Close || p.low>=p8.close);
          completeFlag = completeFlag && (!sequentaFinalBarCloseExceed8HighLow || p.close>=p8.high);
-      }else{
+           }else{
          completeFlag = completeFlag && (!sequentaFinalBarHighLowExceed8Close || p.high<=p8.close);
-         completeFlag = completeFlag &&(!sequentaFinalBarCloseExceed8HighLow || p.close<=p8.low);      
-      }      
-      completeFlag = completeFlag || combo;
+         completeFlag = completeFlag &&(!sequentaFinalBarCloseExceed8HighLow || p.close<=p8.low);
+        }
+      completeFlag=completeFlag || combo;
 
-      if(completeFlag){
-         lastSignalValidated = true;
-         drawSignal(p0,sl[nextSignalIndex-1]);
-         if(playSoundOnSignal){
-            PlaySound("alert2.wav");
-         }
-      }else{
-         if(nextSignalIndex==ArraySize(sl) && bars.Total() > (sl[ArraySize(sl) - 1] + maxDefferedCdn)){
-            lastSignalValidated = true;
-            utils.drawLabel(setupTracker.chartId,p0,setupTracker.side,"-",7,drawCol);
-         }else{
-            utils.drawLabel(setupTracker.chartId,p0,setupTracker.side,"+",7,drawCol);
-         }         
-      }
+      if(completeFlag)
+        {
+               lastSignalValidated=true;
+               drawSignal(p0,sl[nextSignalIndex-1]);
+           }else{
+               if(nextSignalIndex==ArraySize(sl) && bars.Total()>(sl[ArraySize(sl)-1]+maxDefferedCdn))
+                 {
+                        lastSignalValidated=true;
+                        utils.drawLabel(setupTracker.chartId,p0,setupTracker.side,"-",7,drawCol);
+                    }else{               
+                        utils.drawLabel(setupTracker.chartId,p0,setupTracker.side,"+",7,drawCol);            
+                 }
+        }
      }
 
    completed=nextSignalIndex==ArraySize(sl) && lastSignalValidated;
@@ -238,7 +249,7 @@ void CountDownTracker::drawSignal(Period *p,int length)
    sl.side=setupTracker.side;
    sl.start=idx-1;
    pendingStopLosses.Add(sl);
-   utils.drawLabel(setupTracker.chartId,p,setupTracker.side,lb,7,drawCol);
+   utils.drawLabel(setupTracker.chartId,p,setupTracker.side,lb,15,drawCol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

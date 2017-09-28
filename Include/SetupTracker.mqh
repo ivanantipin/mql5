@@ -112,8 +112,11 @@ void SetupTracker::draw(){
       int relIdx = i - start + 1;
       if(relIdx % 2 != 0){
          utils.drawLabel(chartId,p,side,IntegerToString(relIdx), 6, Yellow); 
-      }      
+      } 
    }
+   
+   
+   
    lastDrawn = end -1;
 }
 

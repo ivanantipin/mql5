@@ -48,7 +48,7 @@ void GrUtils::setPrefix(string pr){
 }
 
 void GrUtils::~GrUtils(){
-   Print("deleting utils constr");
+   //Print("deleting utils constr");
    for(int i =0; i < labels.Total(); i++){
       string lb = labels.At(i);
       int ind = StringFind(lb,"_",0);      
@@ -56,7 +56,7 @@ void GrUtils::~GrUtils(){
       ObjectDelete(chartId,lb);
    }
    delete labels;
-   Print("deleted utils");
+   //Print("deleted utils");
 }
 
 void GrUtils::drawLabel(long chartId, datetime time, double price, string label, int size, color cl, int anchor){
