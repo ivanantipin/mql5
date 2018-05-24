@@ -197,10 +197,10 @@ bool CountDownTracker::calcCompleted(const int &sl[])
 
       if(setupTracker.side==Sell)
         {
-         completeFlag = completeFlag && (!sequentaFinalBarHighLowExceed8Close || p.low>=p8.close);
-         completeFlag = completeFlag && (!sequentaFinalBarCloseExceed8HighLow || p.close>=p8.high);
+         completeFlag = completeFlag && (!sequentaFinalBarHighLowExceed8Close || p.high >= p8.close);
+         completeFlag = completeFlag && (!sequentaFinalBarCloseExceed8HighLow || p.close >= p8.high);
            }else{
-         completeFlag = completeFlag && (!sequentaFinalBarHighLowExceed8Close || p.high<=p8.close);
+         completeFlag = completeFlag && (!sequentaFinalBarHighLowExceed8Close || p.low <= p8.close);
          completeFlag = completeFlag &&(!sequentaFinalBarCloseExceed8HighLow || p.close<=p8.low);
         }
       completeFlag=completeFlag || combo;
